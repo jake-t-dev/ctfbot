@@ -71,6 +71,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       .join("\n");
 
     await interaction.reply(`Top Teams for ${country}:\n${teamList}`);
+    
   } catch (error) {
     console.error("Error fetching top teams:", error);
     await interaction.reply(
