@@ -10,7 +10,7 @@ const client = new Client({
 
 client.once("ready", async () => {
   console.log("Deploying commands...");
-  if (config.NODE_ENV !== "production") {
+  if (config.ENV !== "production") {
     const guilds = await client.guilds.fetch();
     for (const guild of guilds.values()) {
       await deployGuildCommands({ guildId: guild.id });
@@ -24,7 +24,7 @@ client.once("ready", async () => {
 });
 
 client.on("guildCreate", async (guild) => {
-  if (config.NODE_ENV === "production") {
+  if (config.ENV === "production") {
     await deployGuildCommands({ guildId: guild.id });
   }
 });
