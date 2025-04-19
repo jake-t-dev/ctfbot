@@ -6,7 +6,7 @@
   "scripts": {
     "test": "test",
     "dev": "tsx watch src/bot.ts",
-    "start": "node dist/bot.js",
+    "start": "npm run build && node dist/bot.js",
     "build": "tsup src/bot.ts --minify"
   },
   "repository": {
