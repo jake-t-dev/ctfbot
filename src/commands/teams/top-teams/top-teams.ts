@@ -1,4 +1,8 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import {
+  ChatInputCommandInteraction,
+  EmbedBuilder,
+  SlashCommandBuilder,
+} from "discord.js";
 import axios from "axios";
 
 export const data = new SlashCommandBuilder()
@@ -27,12 +31,13 @@ export async function execute(interaction: ChatInputCommandInteraction) {
   const numberOfTeams = interaction.options.getInteger("number") || 10;
   const year =
     interaction.options.getInteger("year") || new Date().getFullYear();
+
+  console.log(`https://ctftime.org/api/v1/top/${year}/?limit=${numberOfTeams}`);
   const url = `https://ctftime.org/api/v1/top/${year}/?limit=${numberOfTeams}`;
 
   try {
     const response = await axios.get(url);
     const data = response.data;
-    const year = new Date().getFullYear();
     const teams = data[year];
 
     if (!Array.isArray(teams)) {
@@ -48,9 +53,21 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       })
       .join("\n");
 
-    await interaction.reply(
-      `Top ${numberOfTeams} Teams for ${year}:\n${teamList}`
-    );
+    const embedReturn = new EmbedBuilder()
+      .setColor("#df1e28")
+      .setTitle(`Top ${numberOfTeams} Teams for ${year}`)
+      .addFields({ name: "Teams", value: teamList })
+      .setThumbnail(
+        "https://ctftime.org/media/cache/6a/d2/6ad2d93358ef6a2769edf61b1a946af6.png"
+      )
+      .setFooter({
+        text: "CTFTime API",
+        iconURL:
+          "https://ctftime.org/media/cache/6a/d2/6ad2d93358ef6a2769edf61b1a946af6.png",
+      })
+      .setTimestamp();
+
+    await interaction.reply({ embeds: [embedReturn] });
   } catch (error) {
     console.error("Error fetching top teams:", error);
     await interaction.reply(

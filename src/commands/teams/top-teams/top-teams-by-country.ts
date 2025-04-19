@@ -1,5 +1,6 @@
 import {
   ChatInputCommandInteraction,
+  EmbedBuilder,
   SlashCommandBuilder,
   SlashCommandStringOption,
 } from "discord.js";
@@ -70,8 +71,22 @@ export async function execute(interaction: ChatInputCommandInteraction) {
       })
       .join("\n");
 
-    await interaction.reply(`Top Teams for ${country}:\n${teamList}`);
-    
+    const embedReturn = new EmbedBuilder()
+      .setColor("#df1e28")
+      .setTitle(`Top Teams for ${country}`)
+      .setDescription("Top teams for the current year by country.")
+      .addFields({ name: "Teams", value: teamList })
+      .setThumbnail(
+        "https://ctftime.org/media/cache/6a/d2/6ad2d93358ef6a2769edf61b1a946af6.png"
+      )
+      .setFooter({
+        text: "CTFTime API",
+        iconURL:
+          "https://ctftime.org/media/cache/6a/d2/6ad2d93358ef6a2769edf61b1a946af6.png",
+      })
+      .setTimestamp();
+
+    await interaction.reply({ embeds: [embedReturn] });
   } catch (error) {
     console.error("Error fetching top teams:", error);
     await interaction.reply(
