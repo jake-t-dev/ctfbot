@@ -24,6 +24,8 @@ client.once("ready", async () => {
 });
 
 client.on("guildCreate", async (guild) => {
+  client.guilds.cache.get("<guild id>");
+  guild.commands.set([]);
   if (config.ENV !== "production") {
     await deployGuildCommands({ guildId: guild.id });
   }
